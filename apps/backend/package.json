@@ -1,0 +1,10 @@
+{
+  "name": "backend",
+  "private": true,
+  "scripts": {
+    "dev": "./gradlew bootRun",
+    "build": "./gradlew build",
+    "lint": "./gradlew check -x test",
+    "test": "./gradlew test"
+  }
+}
