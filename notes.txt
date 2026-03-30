@@ -1,14 +1,16 @@
+Flujo Git (actualizado)
 
-Actualizar Cambios
-git add .
-git commit -m "nombreCommit"
-git push
-
-Para Nuevas Tareas:
+Nueva tarea:
 git checkout develop
 git pull
-
 git checkout -b feature/nombre-feature
 
-Trabajar -> luego
+Publicar cambios:
+git add .
+git commit -m "feat: descripcion"
 git push -u origin feature/nombre-feature
+
+Integracion:
+- Abrir Pull Request hacia develop
+- Esperar CI en GitHub Actions
+- Hacer merge solo con revision aprobada
