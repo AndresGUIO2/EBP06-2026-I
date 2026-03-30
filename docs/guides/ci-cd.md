@@ -9,38 +9,23 @@ Workflow: .github/workflows/ci.yml
 
 Triggers:
 - Pull requests to develop and main.
-- Pushes to main.
+- Pushes to develop and main.
 
 Checks:
-- pnpm lint
 - pnpm test
-- pnpm build
 
-## CD for develop
-Workflow: .github/workflows/deploy-develop.yml
+## Dev deploys
+- Frontend deployment is handled by `.github/workflows/deploy-frontend.yml`.
+- The frontend deploy runs only after the `Tests` workflow finishes successfully for a push.
+- Pushes to `develop` deploy the frontend to the Vercel `preview` environment.
+- Pushes to `main` deploy the frontend to the Vercel `production` environment.
+- Backend deployment is handled by Railway Watch with `Wait for CI` enabled instead of a deploy hook.
 
-Trigger:
-- Push to develop.
-
-Deploy targets:
-- Frontend to Vercel (only when frontend/shared files change).
-- Backend to Railway via deploy hook (only when backend/shared files change).
-
-Changed path filters include:
-- apps/frontend/**
-- apps/backend/**
-- packages/**
-- package.json
-- pnpm-lock.yaml
-- pnpm-workspace.yaml
-- turbo.json
-
-Required GitHub secrets:
+Required GitHub secrets for current workflows:
 - VERCEL_TOKEN
 - VERCEL_ORG_ID
 - VERCEL_PROJECT_ID
-- RAILWAY_BACKEND_DEPLOY_HOOK
 
 ## Production
-- Not enabled yet.
-- main currently runs CI only.
+- Frontend production deployments are triggered from `main` after the `Tests` workflow succeeds.
+- Backend production deployment strategy is still defined outside GitHub Actions.

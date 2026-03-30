@@ -43,13 +43,13 @@ This repository is agent-agnostic and supports Claude Code, Codex, Copilot, and 
 - For UI tickets from Figma, attach the link and one desktop/mobile screenshot pair.
 
 ## CI/CD behavior
-- Pull requests to develop/main run lint, test, and build.
-- Push to develop deploys:
-  - Frontend to Vercel.
-  - Backend to Railway via deploy hook.
+- Pull requests to develop/main run tests.
+- Pushes to develop/main run the same test workflow.
+- A successful push test run on develop triggers a Vercel preview deployment for the frontend from GitHub Actions.
+- A successful push test run on main triggers a Vercel production deployment for the frontend from GitHub Actions.
+- Backend dev deployment uses Railway Watch with Wait for CI instead of a deploy hook.
 
 ## Required secrets
 - VERCEL_TOKEN
 - VERCEL_ORG_ID
 - VERCEL_PROJECT_ID
-- RAILWAY_BACKEND_DEPLOY_HOOK
