@@ -1,0 +1,53 @@
+name: Deploy to Production
+
+# Triggers on every push to main.
+# Required secrets (Settings → Secrets and variables → Actions):
+#   RAILWAY_BACKEND_PROD_DEPLOY_HOOK — Railway deploy hook URL for the
+#     EBP06-2026-I service in the prod environment.
+#     Obtain it from: Railway dashboard → EBP06-2026-I service →
+#     Settings → Deploy → Deploy Hooks → "Add deploy hook".
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  detect-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect changed areas
+        id: filter
+        uses: dorny/paths-filter@v3
+        with:
+          filters: |
+            backend:
+              - 'apps/backend/**'
+              - 'packages/**'
+              - 'package.json'
+              - 'pnpm-lock.yaml'
+              - 'pnpm-workspace.yaml'
+              - 'turbo.json'
+
+  deploy-backend-railway-prod:
+    needs: detect-changes
+    if: needs.detect-changes.outputs.backend == 'true'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trigger Railway backend deploy hook (prod)
+        env:
+          RAILWAY_BACKEND_PROD_DEPLOY_HOOK: ${{ secrets.RAILWAY_BACKEND_PROD_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$RAILWAY_BACKEND_PROD_DEPLOY_HOOK" ]; then
+            echo "::error::Missing RAILWAY_BACKEND_PROD_DEPLOY_HOOK secret."
+            echo "Add it under Settings → Secrets and variables → Actions."
+            exit 1
+          fi
+          echo "Triggering Railway deployment for EBP06-2026-I (prod)..."
+          curl -fsSL -X POST "$RAILWAY_BACKEND_PROD_DEPLOY_HOOK"
+          echo "Deploy hook triggered successfully."
