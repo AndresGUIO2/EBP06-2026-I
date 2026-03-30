@@ -51,13 +51,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: pnpm
-
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
-
-      - name: Build frontend
-        run: pnpm --filter frontend build
 
       - name: Resolve Vercel environment
         id: vercel-env
@@ -65,11 +58,19 @@ jobs:
         run: |
           if [ "${{ github.ref_name }}" = "main" ]; then
             echo "pull_args=--environment=production" >> "$GITHUB_OUTPUT"
-            echo "deploy_args=--prebuilt --prod" >> "$GITHUB_OUTPUT"
+            echo "deploy_args=--prod" >> "$GITHUB_OUTPUT"
           else
             echo "pull_args=--environment=preview --git-branch=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-            echo "deploy_args=--prebuilt" >> "$GITHUB_OUTPUT"
+            echo "deploy_args=" >> "$GITHUB_OUTPUT"
           fi
+
+      - name: Pull Vercel project settings
+        working-directory: apps/frontend
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: pnpm dlx vercel pull --yes ${{ steps.vercel-env.outputs.pull_args }} --token "$VERCEL_TOKEN"
 
       - name: Deploy frontend to Vercel
         working-directory: apps/frontend
@@ -77,7 +78,4 @@ jobs:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-        run: |
-          pnpm dlx vercel pull --yes ${{ steps.vercel-env.outputs.pull_args }} --token "$VERCEL_TOKEN"
-          pnpm dlx vercel build --token "$VERCEL_TOKEN"
-          pnpm dlx vercel deploy ${{ steps.vercel-env.outputs.deploy_args }} --token "$VERCEL_TOKEN"
+        run: pnpm dlx vercel deploy --yes ${{ steps.vercel-env.outputs.deploy_args }} --token "$VERCEL_TOKEN"
