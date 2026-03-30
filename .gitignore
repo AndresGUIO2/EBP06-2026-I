@@ -22,3 +22,26 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 replay_pid*
+
+# Node / Monorepo
+node_modules/
+.pnpm-store/
+.turbo/
+dist/
+coverage/
+
+# Spring / Gradle
+.gradle/
+build/
+target/
+
+# Environment and logs
+.env
+.env.local
+.DS_Store
+*.log
+.logs/
+
+# IDE
+.idea/
+*.iml

@@ -1,38 +1,23 @@
 services:
   db:
     image: postgres:15
-    container_name: EBP06_db
-
+    container_name: ebp06_db
+    restart: unless-stopped
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: ebp06
+      POSTGRES_USER: ${POSTGRES_USER:-admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-admin}
+      POSTGRES_DB: ${POSTGRES_DB:-ebp06}
 
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT:-5432}:5432"
 
     volumes:
       - ebp06_data:/var/lib/postgresql/data
-
-  backend:
-    build: ./backend
-    container_name: EBP06_backend
-
-    ports:
-      - "8080:8080"
-
-    depends_on:
-      - db
-
-  frontend:
-    build: ./frontend
-    container_name: EBP06_frontend
-
-    ports:
-      - "3000:3000"
-
-    depends_on:
-      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-admin} -d ${POSTGRES_DB:-ebp06}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   ebp06_data:
