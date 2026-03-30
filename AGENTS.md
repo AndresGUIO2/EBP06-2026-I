@@ -45,8 +45,8 @@ This repository is agent-agnostic and supports Claude Code, Codex, Copilot, and 
 ## CI/CD behavior
 - Pull requests to develop/main run tests.
 - Pushes to develop/main run the same test workflow.
-- A successful push test run on develop triggers a Vercel preview deployment for the frontend from GitHub Actions.
-- A successful push test run on main triggers a Vercel production deployment for the frontend from GitHub Actions.
+- A successful push test run on develop triggers a Vercel preview deployment for the frontend from the same GitHub Actions workflow.
+- A successful push test run on main triggers a Vercel production deployment for the frontend from the same GitHub Actions workflow.
 - Backend dev deployment uses Railway Watch with Wait for CI instead of a deploy hook.
 
 ## Required secrets
