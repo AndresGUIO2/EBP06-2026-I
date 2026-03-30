@@ -65,7 +65,6 @@ jobs:
           fi
 
       - name: Pull Vercel project settings
-        working-directory: apps/frontend
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
@@ -73,7 +72,6 @@ jobs:
         run: pnpm dlx vercel pull --yes ${{ steps.vercel-env.outputs.pull_args }} --token "$VERCEL_TOKEN"
 
       - name: Deploy frontend to Vercel
-        working-directory: apps/frontend
         env:
           VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
