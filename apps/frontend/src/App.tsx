@@ -10,9 +10,11 @@ function App() {
   const [health, setHealth] = useState<HealthPayload | null>(null)
   const [error, setError] = useState<string | null>(null)
 
-  const apiBaseUrl =
-    import.meta.env.VITE_API_BASE_URL?.replace(/\/$/, '') ??
+  const apiBaseUrl = (
+    import.meta.env.VITE_API_URL ??
+    import.meta.env.VITE_API_BASE_URL ??
     'http://localhost:8080'
+  ).replace(/\/$/, '')
 
   useEffect(() => {
     const checkHealth = async () => {
