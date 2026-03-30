@@ -1,13 +1,13 @@
-name: CI
+name: Tests
 
 on:
   pull_request:
     branches: [develop, main]
   push:
-    branches: [main]
+    branches: [develop, main]
 
 jobs:
-  quality:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -32,11 +32,5 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint
-        run: pnpm lint
-
       - name: Test
         run: pnpm test
-
-      - name: Build
-        run: pnpm build

@@ -45,9 +45,9 @@ La plataforma busca resolver esto permitiendo:
 - **Docker Compose:** Virtualización de infraestructura local para levantar el ecosistema completo con un par de comandos.
 
 ### CI/CD
-- **GitHub Actions:** Pipelines de integración continua que ejecutan linters, pruebas y builds en cada Pull Request.
-- **Despliegues (dev):** Frontend desplegado en Vercel; Backend desplegado en Railway mediante deploy hook.
-- **Secrets necesarios:** `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`, `RAILWAY_BACKEND_DEPLOY_HOOK`.
+- **GitHub Actions:** Pipeline de integración continua dedicado a ejecutar pruebas automáticas.
+- **Despliegues:** El frontend se despliega a Vercel desde GitHub Actions cuando la rama pasa tests: `develop` va a `preview` y `main` va a `production`; el backend usa Railway Watch con `Wait for CI`.
+- **Secrets necesarios en GitHub Actions:** `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
 - **Documentación:** Ver [docs/guides/ci-cd.md](docs/guides/ci-cd.md) para detalles de configuración y flujos.
 
 ### Agentes IA / Automatización
@@ -129,11 +129,10 @@ Gracias a la combinación de **pnpm workspaces** y **Turborepo**, puedes control
 
 ## CI/CD
 
-- CI: pull requests a develop y main.
-- CD en develop:
-  - Frontend despliega en Vercel.
-  - Backend despliega en Railway mediante deploy hook.
-- Main: solo CI por ahora.
+- GitHub Actions: ejecuta `pnpm test` en pull requests y pushes a `develop` y `main`.
+- Frontend: despliegue a Vercel desde GitHub Actions despues de un push exitoso, usando `preview` para `develop` y `production` para `main`.
+- Backend: Railway Watch con `Wait for CI`.
+- Main: despliega frontend a produccion solo si `Tests` pasa.
 
 Mas detalle en docs/guides/ci-cd.md.
 
