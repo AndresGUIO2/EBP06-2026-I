@@ -13,10 +13,11 @@ Triggers:
 
 Checks:
 - pnpm test
+- Frontend deploy to Vercel after a successful push test run on `develop` or `main`
 
 ## Dev deploys
-- Frontend deployment is handled by `.github/workflows/deploy-frontend.yml`.
-- The frontend deploy runs only after the `Tests` workflow finishes successfully for a push.
+- Frontend deployment is handled by `.github/workflows/ci.yml`.
+- The frontend deploy job runs only after the `test` job finishes successfully for a push.
 - Pushes to `develop` deploy the frontend to the Vercel `preview` environment.
 - Pushes to `main` deploy the frontend to the Vercel `production` environment.
 - Backend deployment is handled by Railway Watch with `Wait for CI` enabled instead of a deploy hook.

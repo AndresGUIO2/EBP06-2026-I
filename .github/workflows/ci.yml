@@ -34,3 +34,46 @@ jobs:
 
       - name: Test
         run: pnpm test
+
+  deploy-frontend:
+    needs: test
+    if: github.event_name == 'push' && (github.ref_name == 'develop' || github.ref_name == 'main')
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Resolve Vercel environment
+        id: vercel-env
+        shell: bash
+        run: |
+          if [ "${{ github.ref_name }}" = "main" ]; then
+            echo "pull_args=--environment=production" >> "$GITHUB_OUTPUT"
+            echo "deploy_args=--prod" >> "$GITHUB_OUTPUT"
+          else
+            echo "pull_args=--environment=preview --git-branch=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+            echo "deploy_args=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Pull Vercel project settings
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: pnpm dlx vercel pull --yes ${{ steps.vercel-env.outputs.pull_args }} --token "$VERCEL_TOKEN"
+
+      - name: Deploy frontend to Vercel
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: pnpm dlx vercel deploy --yes ${{ steps.vercel-env.outputs.deploy_args }} --token "$VERCEL_TOKEN"

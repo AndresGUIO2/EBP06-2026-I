@@ -45,7 +45,7 @@ La plataforma busca resolver esto permitiendo:
 - **Docker Compose:** Virtualización de infraestructura local para levantar el ecosistema completo con un par de comandos.
 
 ### CI/CD
-- **GitHub Actions:** Pipeline de integración continua dedicado a ejecutar pruebas automáticas.
+- **GitHub Actions:** Pipeline de integración continua que ejecuta pruebas y, en pushes válidos, despliega el frontend.
 - **Despliegues:** El frontend se despliega a Vercel desde GitHub Actions cuando la rama pasa tests: `develop` va a `preview` y `main` va a `production`; el backend usa Railway Watch con `Wait for CI`.
 - **Secrets necesarios en GitHub Actions:** `VERCEL_TOKEN`, `VERCEL_ORG_ID`, `VERCEL_PROJECT_ID`.
 - **Documentación:** Ver [docs/guides/ci-cd.md](docs/guides/ci-cd.md) para detalles de configuración y flujos.
@@ -130,7 +130,7 @@ Gracias a la combinación de **pnpm workspaces** y **Turborepo**, puedes control
 ## CI/CD
 
 - GitHub Actions: ejecuta `pnpm test` en pull requests y pushes a `develop` y `main`.
-- Frontend: despliegue a Vercel desde GitHub Actions despues de un push exitoso, usando `preview` para `develop` y `production` para `main`.
+- Frontend: despliegue a Vercel desde el mismo workflow de GitHub Actions despues de un push exitoso, usando `preview` para `develop` y `production` para `main`.
 - Backend: Railway Watch con `Wait for CI`.
 - Main: despliega frontend a produccion solo si `Tests` pasa.
 
