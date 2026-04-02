@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:finanzasdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+  flyway:
+    enabled: true
+
+server:
+  port: 8080
+
+jwt:
+  # For dev only. Override with env var JWT_SECRET in production.
+  secret: ${JWT_SECRET:dev-very-secret-key-change-me-please-dev-very-secret-key}
+  expiration-ms: 3600000 # 1 hour
