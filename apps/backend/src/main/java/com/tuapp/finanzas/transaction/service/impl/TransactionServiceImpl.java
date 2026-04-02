@@ -50,12 +50,12 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     private TransactionDto toDto(Transaction t) {
-        return TransactionDto.builder()
-                .id(t.getId())
-                .amount(t.getAmount())
-                .description(t.getDescription())
-                .categoryId(t.getCategory() != null ? t.getCategory().getId() : null)
-                .userId(t.getUser() != null ? t.getUser().getId() : null)
-                .build();
+        return new TransactionDto(
+                t.getId(),
+                t.getAmount(),
+                t.getDescription(),
+                t.getCategory() != null ? t.getCategory().getId() : null,
+                t.getUser() != null ? t.getUser().getId() : null
+        );
     }
 }

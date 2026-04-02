@@ -1,21 +1,18 @@
-package com.tuapp.finanzas.user.dto;
+package com.tuapp.finanzas.auth.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-/** Simple POJO for user creation request. Explicit getters/setters to ensure runtime binding. */
-public class CreateUserRequest {
+public class LoginRequest {
     @NotBlank
     private String username;
     @NotBlank
     private String password;
-    private String fullName;
 
-    public CreateUserRequest() {}
+    public LoginRequest() {}
 
-    public CreateUserRequest(String username, String password, String fullName) {
+    public LoginRequest(String username, String password) {
         this.username = username;
         this.password = password;
-        this.fullName = fullName;
     }
 
     public String getUsername() {
@@ -32,13 +29,5 @@ public class CreateUserRequest {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
     }
 }
